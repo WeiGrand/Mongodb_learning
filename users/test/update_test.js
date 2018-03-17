@@ -9,7 +9,7 @@ describe('Updating records', () => {
     let joe;
 
     beforeEach((done) => {
-        joe = new User({ name: 'Joe' });
+        joe = new User({ name: 'Joe', likes: 0 });
         joe.save()
             .then(() => {
                 done();
@@ -69,5 +69,24 @@ describe('Updating records', () => {
             }),
             done
         );
+    });
+
+    //xit can make it pending
+    it('A user can have their likes in incremented by 1', (done) => {
+        User.update({
+            name: 'Joe'
+        }, {
+            $inc: {
+                likes: 10
+            }
+        })
+            .then(() => User.findOne({
+                name: 'Joe'
+            }))
+            .then((user) => {
+                //joe.postCount === 0
+                assert(user.likes === 10);
+                done();
+            })
     });
 });
