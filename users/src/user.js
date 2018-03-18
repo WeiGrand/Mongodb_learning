@@ -31,6 +31,18 @@ UserSchema.virtual('postCount')
         return this.posts.length;
     });
 
+//middleware
+UserSchema.pre('remove', function(next) {
+    const BlogPost = mongoose.model('blogPost');
+
+    BlogPost.remove({
+        _id: {
+            $in: this.blogPosts
+        }
+    })
+        .then(() => next());
+});
+
 //创建Model
 const User = mongoose.model('user', UserSchema);
 
